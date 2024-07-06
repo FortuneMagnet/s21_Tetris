@@ -1,28 +1,34 @@
-#include "tetris.h"
+#include "s21_tetris.h"
 
 
 
 int main(int argc, char* argv[]) {
-
-    initscr(); // инициализация нкурсес
-    // добавить цвет
-    cbreak();
-    noecho();
-    nodelay(stdscr, TRUE);
-    scrollok(stdscr, TRUE);
-
+    init_ncurses();
     GameInfo_t* t = createGame();
-    
-    while (1){
-        int ch = getch();
-        initActions(t, ch);
+    t->state = START;
+    // стадия старт
+        // draw_start(t);
+        // initActions(t, getch());
+        // if (t->action == )
+    // while (t->state != EXIT){
+    //     if (t->state = PAUSE){
+    //         while (t->state != GAME)
+    //     }
 
-        updateCurrentState(t);
-        drawfield(t);
-        usleep(100000);
-        if (t->stop_game == 1)
-            break;
+        // cтадия GAME
+        while (t->state != GAME_OVER){
+            initActions(t, getch());
+            if (t->action == Pause){
+                draw_all;
+            }
+            updateCurrentState(t);
+            // drawfield(t);
+            draw_all(t);
+            usleep(1000);
+            
+        }
     }
+
     freeGame(t);
     endwin();
     return 0;

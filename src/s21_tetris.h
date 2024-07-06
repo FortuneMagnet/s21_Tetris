@@ -37,23 +37,33 @@ typedef struct {
 
     int action;
 
-    int stop_game;
+    int ticks;
+    int state;
+    
 } GameInfo_t;
 
 typedef enum{
     O, I, L, J, S, Z, T
 } Tetramino_t;
 
+typedef enum{
+    START, PAUSE, GAME, GAME_OVER, EXIT
+} GameState_t;
+
 
 
 // void userInput(UserAction_t action, bool hold);
+
+void dropLine(int i, GameInfo_t* t);
+int checkLine(int i, GameInfo_t* t);
+int eraseLinesTet(GameInfo_t* t);
+
 void dropNewFigure(GameInfo_t* t);
 void fromNextToFigure(GameInfo_t *t);
 
 
 /// LOGIC FUNCTIONS
-
-
+void init_ncurses();
 GameInfo_t* createGame();
 GameInfo_t* createField(GameInfo_t* t);
 GameInfo_t* createNext(GameInfo_t* t);
@@ -74,5 +84,11 @@ void initActions(GameInfo_t* t, int ch);
 
 GameInfo_t updateCurrentState();
 
+
+// FRONT PART
+void draw_main(GameInfo_t* t);
+void draw_next(GameInfo_t* t);
+// void draw_field_score(int high_score, int score);
+void draw_all(GameInfo_t* t);
 
 #endif 
