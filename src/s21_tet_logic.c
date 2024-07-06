@@ -23,6 +23,12 @@ GameInfo_t* createGame(){
     return t;
 }
 
+GameInfo_t* restartGame(GameInfo_t* t){
+    freeGame(t);
+    GameInfo_t* newt = createGame();
+    return newt;
+}
+
 GameInfo_t* createField(GameInfo_t* t){
     t->field = malloc(rows * sizeof(int*));
     for (int i = 0; i < rows; i++){
@@ -113,6 +119,8 @@ void freeGame(GameInfo_t *t){
     }
 }
 
+
+
 void drawfield(GameInfo_t* t){
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
@@ -179,15 +187,27 @@ void initActions(GameInfo_t* t, int ch){
       t->action = Left;
     else if (ch == KEY_RIGHT)
       t->action = Right;
-    else if (ch == ' ')
-      t->action = Pause;
+    else if (ch == ' '){
+        t->action = Pause;
+        if (t->state == GAME)
+             t->state = PAUSE;
+        else if (t->state == PAUSE)
+             t->state = GAME;
+    }
     else if (ch == 10 || ch == 13)
-      t->action = Start;
+      t->state = GAME;
     else if (ch == 'q' || ch == 'Q')
-      t->action = Terminate;
+      t->state = EXIT;
     else if (ch == ERR)
         t->action = -1;
 }
+
+// void initState(GameInfo_t* t){
+//         if (t->state == GAME)
+//             t->state = PAUSE;
+//         if (t->state == PAUSE)
+//             t->state = GAME;
+// } 
 
 void moveFigureDown(GameInfo_t* t){
     t->y++;
@@ -240,7 +260,6 @@ int collisionTet(GameInfo_t* t){
         }
     }
     if (status > 0) status = 1;
-    // printf("status = %d", status);
     return status;
 }
 
@@ -275,12 +294,13 @@ void dropLine(int i, GameInfo_t* t){
 }
 
 int checkLine(int i, GameInfo_t* t){
+    int status = 1;
     for(int j =0; j< cols; j++){
         if(t->field[i][j] == 0){
-            return 0;// поменять выход из функции
+            status = 0;
         }
     }
-    return 1;
+    return status;
 }
 
 int eraseLinesTet(GameInfo_t* t){
@@ -313,7 +333,7 @@ GameInfo_t updateCurrentState(GameInfo_t* t){
                 if (collisionTet(t))
                     t->state = GAME_OVER; /// state
             }
-            t->ticks = 100;
+            t->ticks = 100; // количество пропускаемых кадров
         }
         ///// Обработка ввода игрока
         if (t->action == Left){
@@ -342,15 +362,7 @@ GameInfo_t updateCurrentState(GameInfo_t* t){
             }
             moveFigureUp(t);
         }
-        if (t->action == Pause){
-            t->state = PAUSE;
-        }
-        if (t->action == Terminate){
-            t->state == EXIT;
-        }
         /////
-
         t->ticks--;
         dropFigure(t);
-
 }

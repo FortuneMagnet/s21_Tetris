@@ -6,29 +6,33 @@ int main(int argc, char* argv[]) {
     init_ncurses();
     GameInfo_t* t = createGame();
     t->state = START;
-    // стадия старт
-        // draw_start(t);
-        // initActions(t, getch());
-        // if (t->action == )
-    // while (t->state != EXIT){
-    //     if (t->state = PAUSE){
-    //         while (t->state != GAME)
-    //     }
 
-        // cтадия GAME
-        while (t->state != GAME_OVER){
+        /////// цикл игры
+        while (t->state != EXIT){ // поменять на EXIT
             initActions(t, getch());
-            if (t->action == Pause){
-                draw_all;
+            if (t->state == START){
+                draw_start_field();
             }
-            updateCurrentState(t);
-            // drawfield(t);
-            draw_all(t);
-            usleep(1000);
-            
+            if (t->state == PAUSE){
+                draw_service_field(t);
+            }
+            if (t->state == GAME){
+                updateCurrentState(t);
+                // drawfield(t);
+                draw_all(t);
+                usleep(1000);
+            }
+            if (t->state == GAME_OVER){
+                while (t->state == GAME_OVER){
+                draw_service_field(t);
+                initActions(t, getch());
+                }
+                if (t->state == GAME){
+                    t = restartGame(t);
+                }
+            }
         }
-    }
-
+        /////// цикл игры
     freeGame(t);
     endwin();
     return 0;

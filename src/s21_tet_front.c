@@ -71,6 +71,40 @@ void draw_next(GameInfo_t* t){
 //   wrefresh(score_win);
 // }
 
+void draw_service_field(GameInfo_t* t) {
+  WINDOW *start_win;
+
+  start_win = newwin(6, 18, 9, 5);
+  box(start_win, 0, 0);
+
+  if (t->state == PAUSE){
+    mvwprintw(start_win, 1, 6, "PAUSE");
+    mvwprintw(start_win, 3, 1, "' ' - CONTINUE");
+    mvwprintw(start_win, 4, 1, "'Q' - EXIT");
+  }
+  if (t->state == GAME_OVER){
+    mvwprintw(start_win, 1, 4, "GAME OVER!");
+    mvwprintw(start_win, 3, 1, "ENTER - ONE MORE");
+    mvwprintw(start_win, 4, 1, "'Q' - EXIT");
+  }
+  wbkgd(start_win, COLOR_PAIR(9));
+  wrefresh(start_win);
+}
+
+void draw_start_field() {
+  WINDOW *start_win;
+
+  start_win = newwin(20, 20, 2, 4);
+  box(start_win, 0, 0);
+
+  mvwprintw(start_win, 3, 5, "S21_TETRIS");
+  mvwprintw(start_win, 10, 4, "PRESS ENTER");
+  mvwprintw(start_win, 11, 6, "TO PLAY");
+  mvwprintw(start_win, 18, 1, "by fortunem");
+  wbkgd(start_win, COLOR_PAIR(8));
+  wrefresh(start_win);
+}
+
 void draw_all(GameInfo_t* t){
     draw_next(t);
     // draw_score(t);

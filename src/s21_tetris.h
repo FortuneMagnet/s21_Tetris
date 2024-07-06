@@ -81,14 +81,17 @@ void chooseZ(GameInfo_t* t);
 void chooseT(GameInfo_t* t);
 void dropFigure(GameInfo_t* t);
 void initActions(GameInfo_t* t, int ch);
+// void initState(GameInfo_t* t);
 
 GameInfo_t updateCurrentState();
-
+GameInfo_t* restartGame(GameInfo_t* t);
 
 // FRONT PART
 void draw_main(GameInfo_t* t);
 void draw_next(GameInfo_t* t);
 // void draw_field_score(int high_score, int score);
+void draw_service_field(GameInfo_t* t);
+void draw_start_field();
 void draw_all(GameInfo_t* t);
 
 #endif 
