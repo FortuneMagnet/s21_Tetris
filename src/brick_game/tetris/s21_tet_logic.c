@@ -1,4 +1,4 @@
-#include "s21_tetris.h"
+#include "../../s21_tetris.h"
 
 void fromNextToFigure(GameInfo_t *t){
     for (int i = 0; i < 4; i++){
@@ -15,126 +15,16 @@ void dropNewFigure(GameInfo_t* t){
     chooseNext(t); 
 }
 
-GameInfo_t* createGame(){
-    GameInfo_t* t = malloc(sizeof(GameInfo_t));
-    t = createField(t);
-    t = createNext(t);
-    t = createFigure(t);
-    return t;
-}
 
-GameInfo_t* restartGame(GameInfo_t* t){
-    freeGame(t);
-    GameInfo_t* newt = createGame();
-    return newt;
-}
-
-GameInfo_t* createField(GameInfo_t* t){
-    t->field = malloc(rows * sizeof(int*));
-    for (int i = 0; i < rows; i++){
-        t->field[i] = malloc(cols * sizeof(int));
-    }
-    for (int i = 0; i < rows; i++){
-        for (int j = 0; j < cols; j++){
-            t->field[i][j] = 0;
+void scoreChecker(GameInfo_t* t){
+    if (t->score > t->high_score){
+        FILE *fp = fopen("hight_score.txt", "r+");
+        if(fp)
+        {
+            fprintf(fp, "%d", t->score);
+            fclose(fp);
         }
     }
-    return t;
-}
-
-GameInfo_t* createNext(GameInfo_t* t){
-    t->next = malloc(4 * sizeof(int*));
-    for (int i = 0; i < 4; i++){
-        t->next[i] = malloc(4 * sizeof(int));
-    }
-    chooseNext(t);
-    return t;
-}
-
-GameInfo_t* createFigure(GameInfo_t* t){
-    t->figure = malloc(4 * sizeof(int*));
-    for (int i = 0; i < 4; i++){
-        t->figure[i] = malloc(4 * sizeof(int));
-    }
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 4; j++){
-            t->figure[i][j] = 0;
-        }
-    }
-    dropNewFigure(t);
-    return t;
-}
-
-int** createTempFigure(){
-    int **array = (int **)malloc(4 * sizeof(int *));
-
-    for (int i = 0; i < 4; i++) {
-        array[i] = (int *)malloc(4 * sizeof(int));
-    }
-    
-    return array;
-}
-
-void freeTempFugire(int **array) {
-    for (int i = 0; i < 4; i++) {
-        free(array[i]);
-    }
-    free(array);
-}
-
-void freeGame(GameInfo_t *t){
-    if (t != NULL){
-        if (t->field != NULL){
-            for (int i = 0; i < cols; i++){
-                if (t->field[i] != NULL)
-                    free(t->field[i]);
-            }
-            free(t->field);
-        }
-        if (t->next){
-            for (int i = 0; i < 4; i++){
-                if (t->next[i] != NULL)
-                    free(t->next[i]);
-            }
-            free(t->next);
-        }
-        if (t->figure != NULL){
-            for (int i = 0; i < 4; i++){
-                if (t->figure[i] != NULL)
-                    free(t->figure[i]);
-            }
-            free(t->figure);
-        }
-        t->score = 0;
-        t->high_score = 0;
-        t->level = 0;
-        t->speed = 0;
-        t->pause = 0;
-        t->x = 0;
-        t->y = 0;
-        t->action = 0;
-        t->state = 0;
-        t->ticks = 0;
-        free(t);
-    }
-}
-
-
-
-void drawfield(GameInfo_t* t){
-    for (int i = 0; i < rows; i++){
-        for (int j = 0; j < cols; j++){
-            if (t->field[i][j] == 0){
-                printw("%s", "..");
-            } else if (t->field[i][j] == 1){
-                printw("%s", "[]");
-            } else if (t->field[i][j] == 2) { 
-                printw("%s", "[]");
-            }
-        }
-        printw("\n");
-    }
-    printw("%d", t->action);
 }
 
 int checkFigureOnField(GameInfo_t* t){ // возвращает 1 если фигур нет
@@ -177,37 +67,6 @@ void plantFigure(GameInfo_t* t){
     }
 }
 
-
-void initActions(GameInfo_t* t, int ch){
-    if (ch == KEY_UP)
-      t->action = Up;
-    else if (ch == KEY_DOWN)
-      t->action = Down;
-    else if (ch == KEY_LEFT)
-      t->action = Left;
-    else if (ch == KEY_RIGHT)
-      t->action = Right;
-    else if (ch == ' '){
-        t->action = Pause;
-        if (t->state == GAME)
-             t->state = PAUSE;
-        else if (t->state == PAUSE)
-             t->state = GAME;
-    }
-    else if (ch == 10 || ch == 13)
-      t->state = GAME;
-    else if (ch == 'q' || ch == 'Q')
-      t->state = EXIT;
-    else if (ch == ERR)
-        t->action = -1;
-}
-
-// void initState(GameInfo_t* t){
-//         if (t->state == GAME)
-//             t->state = PAUSE;
-//         if (t->state == PAUSE)
-//             t->state = GAME;
-// } 
 
 void moveFigureDown(GameInfo_t* t){
     t->y++;
@@ -318,12 +177,8 @@ int eraseLinesTet(GameInfo_t* t){
 
 
 GameInfo_t updateCurrentState(GameInfo_t* t){
-    ////
-
     deleteFigure(t);
         if (t->ticks == 0){
-            if (collisionTet(t))
-                t->state = GAME_OVER;
             moveFigureDown(t);
             if (collisionTet(t)){
                 moveFigureUp(t);
@@ -333,6 +188,7 @@ GameInfo_t updateCurrentState(GameInfo_t* t){
                 if (collisionTet(t))
                     t->state = GAME_OVER; /// state
             }
+            
             t->ticks = 100; // количество пропускаемых кадров
         }
         ///// Обработка ввода игрока

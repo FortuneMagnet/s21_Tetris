@@ -1,5 +1,36 @@
-#include "s21_tetris.h"
+#include "../../s21_tetris.h"
 
+
+void init_ncurses(){
+    initscr();      // Инициализация ncurses
+    start_color();  // Начало работы с цветами
+    curs_set(0);
+    cbreak();    // Скрытие курсора
+    noecho();  // Отключение отображения введенных символов
+    keypad(stdscr, TRUE);  // Включение чтения специальных клавиш
+    nodelay(stdscr, true);
+
+
+    // Инициализация цвета
+  // Цвета фигур
+  init_pair(1, COLOR_GREEN, COLOR_GREEN);
+  init_pair(2, COLOR_GREEN, COLOR_CYAN);
+  init_pair(3, COLOR_GREEN, COLOR_BLUE);
+  init_pair(4, COLOR_GREEN, COLOR_YELLOW);
+  init_pair(5, COLOR_GREEN, COLOR_BLACK);
+  init_pair(6, COLOR_GREEN, COLOR_MAGENTA);
+  init_pair(7, COLOR_GREEN, COLOR_RED);
+
+  // Цвета боковых полей
+  init_pair(8, COLOR_BLUE, COLOR_WHITE);
+
+  // Цвета сервисного поля
+  init_pair(9, COLOR_WHITE, COLOR_BLUE);
+
+  // Цвета игрового поля
+  init_pair(12, COLOR_WHITE, COLOR_WHITE);
+  init_pair(13, COLOR_WHITE, COLOR_BLUE);
+}
 
 void draw_main(GameInfo_t* t){
     for (int i = 0; i < rows; i++){
@@ -55,21 +86,21 @@ void draw_next(GameInfo_t* t){
 
 }
 
-// void draw_field_score(int high_score, int score) {
-//   WINDOW *score_win;
-//   int startx = 26;
-//   int starty = 2;
-//   int width = 12;
-//   int height = 9;
+void draw_score(GameInfo_t* t) {
+  WINDOW *score_win;
+  int startx = 26;
+  int starty = 2;
+  int width = 12;
+  int height = 9;
 
-//   score_win = newwin(height, width, starty, startx);
-//   mvwprintw(score_win, 0, 1, "HIGH SCORE");
-//   mvwprintw(score_win, 2, 4, "%d", high_score);
-//   mvwprintw(score_win, 4, 3, "SCORE");
-//   mvwprintw(score_win, 6, 4, "%d", score);
-//   wbkgd(score_win, COLOR_PAIR(8));
-//   wrefresh(score_win);
-// }
+  score_win = newwin(height, width, starty, startx);
+  mvwprintw(score_win, 0, 1, "HIGH SCORE");
+  mvwprintw(score_win, 2, 4, "%d", t->high_score);
+  mvwprintw(score_win, 4, 3, "SCORE");
+  mvwprintw(score_win, 6, 4, "%d", t->score);
+  wbkgd(score_win, COLOR_PAIR(8));
+  wrefresh(score_win);
+}
 
 void draw_service_field(GameInfo_t* t) {
   WINDOW *start_win;
@@ -107,7 +138,7 @@ void draw_start_field() {
 
 void draw_all(GameInfo_t* t){
     draw_next(t);
-    // draw_score(t);
+    draw_score(t);
     // draw_level(t);
     draw_main(t);
 }

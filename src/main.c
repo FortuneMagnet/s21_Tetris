@@ -6,9 +6,7 @@ int main(int argc, char* argv[]) {
     init_ncurses();
     GameInfo_t* t = createGame();
     t->state = START;
-
-        /////// цикл игры
-        while (t->state != EXIT){ // поменять на EXIT
+        while (t->state != EXIT){
             initActions(t, getch());
             if (t->state == START){
                 draw_start_field();
@@ -24,6 +22,7 @@ int main(int argc, char* argv[]) {
             }
             if (t->state == GAME_OVER){
                 while (t->state == GAME_OVER){
+                scoreChecker(t);
                 draw_service_field(t);
                 initActions(t, getch());
                 }
@@ -32,7 +31,6 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-        /////// цикл игры
     freeGame(t);
     endwin();
     return 0;

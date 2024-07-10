@@ -81,6 +81,10 @@ void chooseZ(GameInfo_t* t);
 void chooseT(GameInfo_t* t);
 void dropFigure(GameInfo_t* t);
 void initActions(GameInfo_t* t, int ch);
+void scoreReader(GameInfo_t* t);
+void scoreChecker(GameInfo_t* t);
+int** createTempFigure();
+void freeTempFugire(int **array);
 // void initState(GameInfo_t* t);
 
 GameInfo_t updateCurrentState();
