@@ -175,6 +175,13 @@ int eraseLinesTet(GameInfo_t* t){
     return score;
 }
 
+void levelProcessing(GameInfo_t* t){
+    //Добавь в игру механику уровней. Каждый раз, когда игрок набирает 600 очков, уровень увеличивается на 1. Повышается скорость, меняется тикрейт
+    if ((t->score > 600 * t->level) && t->level < 10){
+        t->level ++;
+        t->speed = t->speed - 50;
+    }
+}
 
 GameInfo_t updateCurrentState(GameInfo_t* t){
     deleteFigure(t);
@@ -184,12 +191,13 @@ GameInfo_t updateCurrentState(GameInfo_t* t){
                 moveFigureUp(t);
                 plantFigure(t);
                 t->score += eraseLinesTet(t);
+                levelProcessing(t);
                 dropNewFigure(t);
                 if (collisionTet(t))
                     t->state = GAME_OVER; /// state
             }
             
-            t->ticks = 100; // количество пропускаемых кадров
+            t->ticks = 300 - (25 * t->level); // количество пропускаемых кадров
         }
         ///// Обработка ввода игрока
         if (t->action == Left){

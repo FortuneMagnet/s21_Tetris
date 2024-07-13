@@ -2,12 +2,11 @@
 
 GameInfo_t* createGame(){
     GameInfo_t* t = malloc(sizeof(GameInfo_t));
-    //
     scoreReader(t);
-    //
     t = createField(t);
     t = createNext(t);
     t = createFigure(t);
+    t->level = 1;
     return t;
 }
 

@@ -95,9 +95,11 @@ void draw_score(GameInfo_t* t) {
 
   score_win = newwin(height, width, starty, startx);
   mvwprintw(score_win, 0, 1, "HIGH SCORE");
-  mvwprintw(score_win, 2, 4, "%d", t->high_score);
-  mvwprintw(score_win, 4, 3, "SCORE");
-  mvwprintw(score_win, 6, 4, "%d", t->score);
+  mvwprintw(score_win, 1, 4, "%d", t->high_score);
+  mvwprintw(score_win, 3, 3, "SCORE");
+  mvwprintw(score_win, 4, 4, "%d", t->score);
+  mvwprintw(score_win, 6, 3, "LEVEL");
+  mvwprintw(score_win, 7, 4, "%d", t->level);
   wbkgd(score_win, COLOR_PAIR(8));
   wrefresh(score_win);
 }
