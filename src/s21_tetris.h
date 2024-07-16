@@ -39,7 +39,7 @@ typedef struct {
 
     int ticks;
     int state;
-    
+
 } GameInfo_t;
 
 typedef enum{
@@ -54,6 +54,8 @@ typedef enum{
 
 // void userInput(UserAction_t action, bool hold);
 
+// int main(int argc, char* argv[]);
+
 void dropLine(int i, GameInfo_t* t);
 int checkLine(int i, GameInfo_t* t);
 int eraseLinesTet(GameInfo_t* t);
@@ -64,13 +66,12 @@ void fromNextToFigure(GameInfo_t *t);
 
 /// LOGIC FUNCTIONS
 void init_ncurses();
+void gameAlgorithm();
 GameInfo_t* createGame();
 GameInfo_t* createField(GameInfo_t* t);
 GameInfo_t* createNext(GameInfo_t* t);
 GameInfo_t* createFigure(GameInfo_t* t);
 void freeGame(GameInfo_t *t);
-void drawfield(GameInfo_t* t);
-int checkFigureOnField(GameInfo_t* t);
 void chooseNext(GameInfo_t* t);
 void chooseO(GameInfo_t* t);
 void chooseI(GameInfo_t* t);
