@@ -1,4 +1,4 @@
-#include "../../s21_tetris.h"
+#include "../../brick_game/tetris/s21_tetris.h"
 
 
 void init_ncurses(){

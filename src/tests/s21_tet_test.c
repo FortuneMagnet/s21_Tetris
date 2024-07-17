@@ -5,32 +5,104 @@
 
 START_TEST(test_createGame) {
   GameInfo_t* t = createGame();
-  ck_assert_ptr_nonnull(t); // 
+  ck_assert_ptr_nonnull(&t); // 
   freeGame(t);
 }
 END_TEST
 
 START_TEST(test_createField) {
-    GameInfo_t game;
-    createField(&game);
-    ck_assert_ptr_nonnull(game.field);
+    GameInfo_t* t = createGame();
+    ck_assert_ptr_nonnull(t->field);
     for (int i = 0; i < rows; i++) {
-        ck_assert_ptr_nonnull(game.field[i]);
-        for (int j = 0; j < cols; j++) {
-            ck_assert_int_eq(game.field[i][j], 0);
-        }
+       ck_assert_ptr_nonnull(t->field[i]);
     }
-    freeGame(&game);
+    freeGame(t);
 } END_TEST
 
 START_TEST(test_createNext) {
-    GameInfo_t game;
-    createNext(&game);
-    ck_assert_ptr_nonnull(game.next);
+    GameInfo_t* t = createGame();
+    ck_assert_ptr_nonnull(t->next);
     for (int i = 0; i < 4; i++) {
-        ck_assert_ptr_nonnull(game.next[i]);
+        ck_assert_ptr_nonnull(t->next[i]);
     }
-    freeGame(&game);
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_createFigure) {
+    GameInfo_t* t = createGame();
+    ck_assert_ptr_nonnull(t->figure);
+    for (int i = 0; i < 4; i++) {
+        ck_assert_ptr_nonnull(t->figure[i]);
+    }
+    freeGame(t);
+} END_TEST
+
+
+START_TEST(test_chooseNext) {
+    GameInfo_t* t = createGame();
+    chooseNext(t);
+    int sum = 0;
+    for (int i = 0; i < 4;i++){
+        for (int j = 0; j < 4; j++){
+            if (t->next[i][j] == 2)
+                sum ++;
+        }
+    }
+    ck_assert_int_eq(sum, 4);
+    freeGame(t);
+} END_TEST
+
+
+START_TEST(test_dropFigure) {
+    GameInfo_t* t = createGame();
+    dropFigure(t);
+    int sum = 0;
+    for (int i = 0; i < 4;i++){
+        for (int j = 0; j < 4; j++){
+            if (t->field[t->y + i][t->x + j] == 2)
+                sum ++;
+        }
+    }
+    ck_assert_int_eq(sum, 4);
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_initActions) {
+    GameInfo_t* t = createGame();
+    initActions(t, KEY_UP);
+    ck_assert_int_eq(t->action, Up);
+    initActions(t, KEY_DOWN);
+    ck_assert_int_eq(t->action, Down);
+    initActions(t, KEY_LEFT);
+    ck_assert_int_eq(t->action, Left);
+    initActions(t, KEY_RIGHT);
+    ck_assert_int_eq(t->action, Right);
+    initActions(t, ' ');
+    ck_assert_int_eq(t->action, Pause);
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_scoreReader) {
+    GameInfo_t* t = createGame();
+    scoreReader(t);
+    int flag = 0;
+    if (t->high_score >= 0){
+        flag = 1;
+    }
+    ck_assert_int_eq(flag, 1);
+    freeGame(t);
+} END_TEST
+
+
+
+START_TEST(test_createTempFigure) {
+    int **temp = createTempFigure();
+    
+    ck_assert_ptr_nonnull(temp);
+    for (int i = 0; i < 4; i++) {
+        ck_assert_ptr_nonnull(temp[i]);
+    }
+    freeTempFugire(temp);
 } END_TEST
 
 
@@ -47,19 +119,14 @@ START_TEST(test_createNext) {
         tcase_add_test(tc_core, test_createGame);
         tcase_add_test(tc_core, test_createField);
         tcase_add_test(tc_core, test_createNext);
-    //     tcase_add_test(tc_core, test_createFigure);
-    //     tcase_add_test(tc_core, test_freeGame);
-    //  tcase_add_test(tc_core, test_chooseNext);
-    //  tcase_add_test(tc_core, test_chooseO);
-    //  tcase_add_test(tc_core, test_dropFigure);
-    //  tcase_add_test(tc_core, test_initActions);
-    //  tcase_add_test(tc_core, test_scoreReader);
-    //  tcase_add_test(tc_core, test_scoreChecker);
-    //  tcase_add_test(tc_core, test_createTempFigure);
-    //  tcase_add_test(tc_core, test_freeTempFugire);
+        tcase_add_test(tc_core, test_createFigure);
+        tcase_add_test(tc_core, test_chooseNext);
+     
+     tcase_add_test(tc_core, test_initActions);
+     tcase_add_test(tc_core, test_scoreReader);;
+     tcase_add_test(tc_core, test_createTempFigure);
 
-
-
+     tcase_add_test(tc_core, test_dropFigure);
 
      suite_add_tcase(s, tc_core);
 

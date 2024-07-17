@@ -5,7 +5,7 @@
 #include <limits.h>
 #include <stdio.h>
 
-#include "../s21_tetris.h"
+#include "../brick_game/tetris/s21_tetris.h"
 
 Suite *tetris_suite(void);
 void run_testcase(Suite *testcase);

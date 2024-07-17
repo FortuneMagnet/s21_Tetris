@@ -1,4 +1,4 @@
-#include "../../s21_tetris.h"
+#include "s21_tetris.h"
 
 void chooseNext(GameInfo_t* t){
     int fnum = (rand() + 1) % 7;

@@ -1,4 +1,4 @@
-#include "../../s21_tetris.h"
+#include "s21_tetris.h"
 
 GameInfo_t* createGame(){
     GameInfo_t* t = malloc(sizeof(GameInfo_t));
