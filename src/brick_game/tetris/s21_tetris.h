@@ -53,7 +53,9 @@ typedef enum{
 
 
 
+
 //// LOGIC FUNCTIONS
+void gameAlgorithm();
 void fromNextToFigure(GameInfo_t *t);
 void dropNewFigure(GameInfo_t* t);
 void scoreChecker(GameInfo_t* t);
@@ -86,7 +88,7 @@ void chooseT(GameInfo_t* t);
 
 //// INIT FUNCTIONS
 GameInfo_t* createGame(); //
-GameInfo_t* restartGame(GameInfo_t* t);
+GameInfo_t* restartGame(GameInfo_t* t); //
 GameInfo_t* createField(GameInfo_t* t); //
 GameInfo_t* createNext(GameInfo_t* t); //
 GameInfo_t* createFigure(GameInfo_t* t); //
@@ -98,6 +100,7 @@ void initActions(GameInfo_t* t, int ch);//
 
 
 // FRONT PART
+void init_ncurses();
 void draw_main(GameInfo_t* t);
 void draw_next(GameInfo_t* t);
 // void draw_field_score(int high_score, int score);

@@ -5,7 +5,15 @@
 
 START_TEST(test_createGame) {
   GameInfo_t* t = createGame();
-  ck_assert_ptr_nonnull(&t); // 
+  ck_assert_ptr_nonnull(&t); 
+  freeGame(t);
+}
+END_TEST
+
+START_TEST(test_restartGame) {
+  GameInfo_t* t = createGame();
+  restartGame(t);
+  ck_assert_ptr_nonnull(&t); 
   freeGame(t);
 }
 END_TEST
@@ -52,6 +60,118 @@ START_TEST(test_chooseNext) {
     freeGame(t);
 } END_TEST
 
+
+START_TEST(test_chooseO) {
+    GameInfo_t* t = createGame();
+    chooseO(t);
+    int a[4][4] = 
+            {{0, 0, 0, 0},
+            {0, 2, 2, 0},
+            {0, 2, 2, 0},
+            {0, 0, 0, 0}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_chooseI) {
+    GameInfo_t* t = createGame();
+    chooseI(t);
+    int a[4][4] = 
+            {{0, 2, 0, 0,},
+            {0, 2, 0, 0,},
+            {0, 2, 0, 0,},
+            {0, 2, 0, 0,}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_chooseL) {
+    GameInfo_t* t = createGame();
+    chooseL(t);
+    int a[4][4] = 
+            {{0, 2, 0, 0},
+            {0, 2, 0, 0},
+            {0, 2, 2, 0},
+            {0, 0, 0, 0}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_chooseJ) {
+    GameInfo_t* t = createGame();
+    chooseJ(t);
+    int a[4][4] = 
+            {{0, 0, 2, 0,},
+            {0, 0, 2, 0,},
+            {0, 2, 2, 0,},
+            {0, 0, 0, 0,}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_chooseS) {
+    GameInfo_t* t = createGame();
+    chooseS(t);
+    int a[4][4] = 
+            {{0, 0, 0, 0,},
+            {0, 0, 2, 2,},
+            {0, 2, 2, 0,},
+            {0, 0, 0, 0,}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_chooseZ) {
+    GameInfo_t* t = createGame();
+    chooseZ(t);
+    int a[4][4] = 
+            {{0, 0, 0, 0,},
+            {2, 2, 0, 0,},
+            {0, 2, 2, 0,},
+            {0, 0, 0, 0,}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_chooseT) {
+    GameInfo_t* t = createGame();
+    chooseT(t);
+    int a[4][4] = 
+            {{0, 0, 0, 0,},
+            {0, 2, 2, 2,},
+            {0, 0, 2, 0,},
+            {0, 0, 0, 0,}};
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], a[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
 
 START_TEST(test_dropFigure) {
     GameInfo_t* t = createGame();
@@ -105,6 +225,32 @@ START_TEST(test_createTempFigure) {
     freeTempFugire(temp);
 } END_TEST
 
+START_TEST(test_fromNextToFigure) {
+    GameInfo_t* t = createGame();
+    chooseNext(t);
+    fromNextToFigure(t);
+    for (int i = 0; i < 4;i++){
+        for (int j = 0; j < 4; j++){
+            ck_assert_int_eq(t->next[i][j], t->figure[i][j]);
+        }
+    }
+    freeGame(t);
+} END_TEST
+
+START_TEST(test_dropNewFigure) {
+    GameInfo_t* t = createGame();
+    int sum = 0;
+    dropNewFigure(t);
+    for (int i = 0; i < 4;i++){
+        for (int j = 0; j < 4; j++){
+            if (t->field[t->y + i][t->x + j] == 2)
+                sum ++;
+        }
+    }
+    ck_assert_int_eq(sum, 4);
+    freeGame(t);
+} END_TEST
+
 
  Suite *tetris_suite(void)
  {
@@ -117,6 +263,7 @@ START_TEST(test_createTempFigure) {
      tc_core = tcase_create("Core");
 
         tcase_add_test(tc_core, test_createGame);
+        tcase_add_test(tc_core, test_restartGame);
         tcase_add_test(tc_core, test_createField);
         tcase_add_test(tc_core, test_createNext);
         tcase_add_test(tc_core, test_createFigure);
@@ -126,7 +273,29 @@ START_TEST(test_createTempFigure) {
      tcase_add_test(tc_core, test_scoreReader);;
      tcase_add_test(tc_core, test_createTempFigure);
 
+
+
+     tcase_add_test(tc_core, test_chooseNext);
+     tcase_add_test(tc_core, test_chooseO); 
+     tcase_add_test(tc_core, test_chooseI);
+    tcase_add_test(tc_core, test_chooseL);
+    tcase_add_test(tc_core, test_chooseJ);
+    tcase_add_test(tc_core, test_chooseS);
+    tcase_add_test(tc_core, test_chooseZ);
+    tcase_add_test(tc_core, test_chooseT);
+
+
+
      tcase_add_test(tc_core, test_dropFigure);
+     tcase_add_test(tc_core, test_fromNextToFigure);
+     tcase_add_test(tc_core, test_dropNewFigure);
+     // tcase_add_test(tc_core, test_);
+     // tcase_add_test(tc_core, test_);
+     // tcase_add_test(tc_core, test_);
+     // tcase_add_test(tc_core, test_);
+     // tcase_add_test(tc_core, test_);
+     // tcase_add_test(tc_core, test_);
+     // tcase_add_test(tc_core, test_);
 
      suite_add_tcase(s, tc_core);
 
