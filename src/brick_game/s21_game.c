@@ -20,7 +20,6 @@ void gameAlgorithm(){
             }
             if (t->state == GAME){
                 updateCurrentState(t);
-                // drawfield(t);
                 draw_all(t);
                 usleep(1000);
             }

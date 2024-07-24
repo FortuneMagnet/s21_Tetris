@@ -63,20 +63,20 @@ void draw_next(GameInfo_t* t){
   int startx = 26;
   int starty = 12;
   int width = 12;
-  int height = 6;
+  int height = 7;
 
   next_figure_win = newwin(height, width, starty, startx);
   mvwprintw(next_figure_win, 0, 4, "NEXT");
   wbkgd(next_figure_win, COLOR_PAIR(8));
 
-  wattron(next_figure_win, COLOR_PAIR(1));  // Активация цвета
+  wattron(next_figure_win, COLOR_PAIR(6));  // Активация цвета
 
   int k = 0;
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
       if (t->next[i][j] == 2) {
-        mvwaddch(next_figure_win, i + 3, j * 2 + 3, ' ');
-        mvwaddch(next_figure_win, i + 3, j * 2 + 4, ' ');
+        mvwaddch(next_figure_win, i + 2, j * 2 + 3, ' ');
+        mvwaddch(next_figure_win, i + 2, j * 2 + 4, ' ');
       }
       k++;
     }
